@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        /* Header Section */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #222;
+    color: white;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+
+/* Navigation Bar */
+nav {
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation List */
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+/* Button Hover Effect */
+nav button:not(.active):hover {
+    position: relative;
+    color: #ff1515; /* Fire red */
+    text-shadow: 0 0 10px #ff151580, 0 0 20px rgba(255, 17, 17, 0.5);
+    transition: color 0.3s ease-in-out;
+}
+nav button:not(.active):hover::before {
+    content: "";
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    width: 150%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ff4500, #ff1515, transparent);
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.7);
+    transform: translateY(-50%) rotateY(180deg);
+    animation: fireGlow 0.5s ease-in-out infinite alternate;
+}
+@keyframes fireGlow {
+    0% {
+        transform: translateX(-10px) scaleX(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(10px) scaleX(1.2);
+        opacity: 0.8;
+    }
+}
+/* 🔥 Click Stretch Effect */
+nav button:active::before {
+    animation: stretchEffect 0.4s ease-out forwards;
+}
+
+/* Stretch Animation */
+@keyframes stretchEffect {
+    0% {
+        width: 100%;
+        transform: scaleX(1);
+        opacity: 1;
+    }
+    50% {
+        width: 200%;
+        transform: scaleX(1.5);
+        opacity: 0.7;
+    }
+    100% {
+        width: 150%;
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+/* Styling for Buttons inside <li> */
+nav ul li button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 0;
+    margin: 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 22px;
+    color: #fff;
+    transition: color 0.25s;
+    position: relative;
+}
+/* 🔥 Fire Trail Effect (Shared Element) */
+.fire-trail {
+    position: absolute;
+    bottom: -5px;
+    height: 5px;
+    width: 50px; /* Initial width */
+    background: linear-gradient(90deg, transparent, #ff4500, #ff1515, transparent);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.9);
+    transition: all 0.4s ease-in-out;
+    transform-origin: left;
+    opacity: 0;
+}
+
+/* 🔥 Stretch Effect when moving */
+nav ul li button:hover ~ .fire-trail,
+nav ul li button:focus ~ .fire-trail {
+    width: 120px; /* Expands when moving */
+    opacity: 1;
+    transform: scaleX(1.5);
+}
+
+/* Nav Rotation Effect */
+nav.before.active-element {
+    transform: rotateY(180deg);
+}
+
+
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+
+        .product {
+            text-align: center;
+            position: relative;
+            padding: 10px;
+            border-radius: 10px;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-id {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 16px;
+        }
+
+        .product-image-container {
+            height: 256px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-image {
+            height: 192px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .product-info {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .product-description {
+            font-size: 14px;
+            color: #eee;
+            margin-bottom: 8px;
+        }
+
+        .view-more-btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            color: white;
+            border: none;
+            background: none;
+            cursor: pointer;
+            padding: 4px 8px;
+            transition: color 0.3s ease;
+        }
+
+        .view-more-btn:hover {
+            color: #ccc;
+        }
+
+        .arrow-icon {
+            margin-left: 4px;
+            transition: transform 0.3s ease;
+        }
+
+        .view-more-btn:hover .arrow-icon {
+            transform: translateX(4px);
+        }
+
+        .product-details {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .product-details.active {
+            display: block;
+        }
+
+        .product-details h4 {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .ingredients-list {
+            list-style-position: inside;
+            margin: 8px 0;
+            padding-left: 16px;
+        }
+
+        /* Color variations for IDs */
+        .id-01 { color: #059669; }
+        .id-02 { color: #7C3AED; }
+        .id-03 { color: #D97706; }
+        .id-04 { color: #E11D48; }
+        /* Footer */
+     footer {
+         margin-top: 20px;
+         padding: 20px;
+         color: rgb(109, 41, 41);
+         text-align: center;
+      }
+
+    .logo-image {
+        width: 60px; /* Adjust to desired size */
+        height: 60px; /* Ensure it’s a perfect circle */
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="AGMAlogo.png" alt="AGMA Logo" class="logo-image">
+    
+        <nav>
+            <ul>
+                <li><button>TUTORIAL</button></li>
+                <li><button>FIGMA</button></li>
+                <li><button>EFFECT</button></li>
+                <li><button>ANIMATION</button></li>
+            </ul>
+            <div class="fire-trail"></div>  <!-- 🔥 Fire Trail -->
+
+        </nav>
+    </header>
+    
+
+    <div class="container">
+        <div class="products-grid" id="productsGrid"></div>
+    </div>
+    <footer>
+        <p>Copyright © 2025 Brian Juma. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+        const products = [
+            {
+                id: '01',
+                name: 'Green Smoothie',
+                description: 'Delicious flavor',
+                colorClass: 'id-01',
+                image: '01.jpg',
+                details: {
+                    price: '$6.99',
+                    ingredients: ['Spinach', 'Apple', 'Banana', 'Kale'],
+                    nutrition: 'Rich in vitamins and minerals'
+                }
+            },
+            {
+                id: '02',
+                name: 'Berry Smoothie',
+                description: 'Delicious flavor',
+                colorClass: 'id-02',
+                image: '02.jpg',
+                details: {
+                    price: '$7.99',
+                    ingredients: ['Strawberry', 'Blueberry', 'Raspberry'],
+                    nutrition: 'High in antioxidants'
+                }
+            },
+            {
+                id: '03',
+                name: 'Coffee Milk',
+                description: 'Delicious flavor',
+                colorClass: 'id-03',
+                image: '03.jpg',
+                details: {
+                    price: '$5.99',
+                    ingredients: ['Coffee', 'Milk', 'Natural sweetener'],
+                    nutrition: 'Energy boosting'
+                }
+            },
+            {
+                id: '04',
+                name: 'Strawberry',
+                description: 'Exclusive drink',
+                colorClass: 'id-04',
+                image: '04.jpg',
+                details: {
+                    price: '$6.99',
+                    ingredients: ['Fresh strawberries', 'Natural sweetener'],
+                    nutrition: 'Vitamin C rich'
+                }
+            }
+        ];
+
+        function createProductHTML(product) {
+            return `
+                <div class="product" data-product-id="${product.id}">
+                    <div class="product-id ${product.colorClass}">${product.id}</div>
+                    <div class="product-image-container">
+                        <img src="${product.image}" alt="${product.name}" class="product-image">
+                        <div class="product-info">
+                            <h3 class="product-name">${product.name}</h3>
+                            <p class="product-description">${product.description}</p>
+                            <button class="view-more-btn">
+                                View more
+                                <span class="arrow-icon">→</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h4>Product Details</h4>
+                        <p class="product-price">${product.details.price}</p>
+                        <div>
+                            <p><strong>Ingredients:</strong></p>
+                            <ul class="ingredients-list">
+                                ${product.details.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('')}
+                            </ul>
+                            <p><strong>Nutrition:</strong> ${product.details.nutrition}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function initializeProductShowcase() {
+            const productsGrid = document.getElementById('productsGrid');
+            productsGrid.innerHTML = products.map(product => createProductHTML(product)).join('');
+
+            // Add event listeners
+            document.querySelectorAll('.product').forEach(product => {
+                const imageContainer = product.querySelector('.product-image-container');
+                const image = product.querySelector('.product-image');
+                const info = product.querySelector('.product-info');
+                const viewMoreBtn = product.querySelector('.view-more-btn');
+                const details = product.querySelector('.product-details');
+
+                imageContainer.addEventListener('mouseenter', () => {
+                    image.style.transform = 'translateY(-16px)';
+                    info.style.opacity = '1';
+                });
+
+                imageContainer.addEventListener('mouseleave', () => {
+                    image.style.transform = 'translateY(0)';
+                    info.style.opacity = '0';
+                });
+
+                viewMoreBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    details.classList.toggle('active');
+                });
+            });
+        }
+
+        // Initialize when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeProductShowcase);
+    </script>
+</body>
+</html>
